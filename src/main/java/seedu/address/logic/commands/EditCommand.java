@@ -22,6 +22,7 @@ import seedu.address.model.Model;
 import seedu.address.model.application.Address;
 import seedu.address.model.application.Application;
 import seedu.address.model.application.Email;
+import seedu.address.model.application.JobTitle;
 import seedu.address.model.application.Name;
 import seedu.address.model.application.Phone;
 import seedu.address.model.tag.Tag;
@@ -100,7 +101,11 @@ public class EditCommand extends Command {
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(applicationToEdit.getAddress());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(applicationToEdit.getTags());
 
-        return new Application(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedTags);
+        // TODO: modify EditCommand properly to edit job title.
+        JobTitle updatedJobTitle = applicationToEdit.getJobTitle(); // edit command does not allow editing job title
+
+        return new Application(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedTags,
+                updatedJobTitle);
     }
 
     @Override

@@ -13,6 +13,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.application.Address;
 import seedu.address.model.application.Application;
 import seedu.address.model.application.Email;
+import seedu.address.model.application.JobTitle;
 import seedu.address.model.application.Name;
 import seedu.address.model.application.Phone;
 import seedu.address.model.tag.Tag;
@@ -29,14 +30,17 @@ class JsonAdaptedApplication {
     private final String email;
     private final String address;
     private final List<JsonAdaptedTag> tagged = new ArrayList<>();
+    private final String jobTitle;
 
     /**
      * Constructs a {@code JsonAdaptedApplication} with the given application details.
      */
     @JsonCreator
+
     public JsonAdaptedApplication(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
                                   @JsonProperty("email") String email, @JsonProperty("address") String address,
-                                  @JsonProperty("tagged") List<JsonAdaptedTag> tagged) {
+                                  @JsonProperty("tagged") List<JsonAdaptedTag> tagged,
+                                  @JsonProperty("jobTitle") String jobTitle) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -44,6 +48,7 @@ class JsonAdaptedApplication {
         if (tagged != null) {
             this.tagged.addAll(tagged);
         }
+        this.jobTitle = jobTitle;
     }
 
     /**
@@ -57,6 +62,7 @@ class JsonAdaptedApplication {
         tagged.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        jobTitle = source.getJobTitle().value;
     }
 
     /**
@@ -103,7 +109,16 @@ class JsonAdaptedApplication {
         final Address modelAddress = new Address(address);
 
         final Set<Tag> modelTags = new HashSet<>(applicationTags);
-        return new Application(modelName, modelPhone, modelEmail, modelAddress, modelTags);
+        if (jobTitle == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    JobTitle.class.getSimpleName()));
+        }
+        if (!JobTitle.isValidJobTitle(jobTitle)) {
+            throw new IllegalValueException(JobTitle.MESSAGE_CONSTRAINTS);
+        }
+        final JobTitle modelJobTitle = new JobTitle(jobTitle);
+
+        return new Application(modelName, modelPhone, modelEmail, modelAddress, modelTags, modelJobTitle);
     }
 
 }

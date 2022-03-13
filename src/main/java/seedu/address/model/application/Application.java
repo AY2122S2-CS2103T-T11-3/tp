@@ -28,17 +28,20 @@ public class Application {
     private final Address address;
     /** [W.I.P] Will be repurposed in the future */
     private final Set<Tag> tags = new HashSet<>();
+    /** Job Title */
+    private final JobTitle jobTitle;
 
     /**
      * Every field must be present and not null.
      */
-    public Application(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
+    public Application(Name name, Phone phone, Email email, Address address, Set<Tag> tags, JobTitle jobTitle) {
         requireAllNonNull(name, phone, email, address, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.tags.addAll(tags);
+        this.jobTitle = jobTitle;
     }
 
     public Name getName() {
@@ -63,6 +66,10 @@ public class Application {
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
+    }
+
+    public JobTitle getJobTitle() {
+        return jobTitle;
     }
 
     /**
@@ -97,13 +104,14 @@ public class Application {
                 && otherApplication.getPhone().equals(getPhone())
                 && otherApplication.getEmail().equals(getEmail())
                 && otherApplication.getAddress().equals(getAddress())
-                && otherApplication.getTags().equals(getTags());
+                && otherApplication.getTags().equals(getTags())
+                && otherApplication.getJobTitle().equals(getJobTitle());
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, address, tags, jobTitle);
     }
 
     @Override
@@ -122,6 +130,7 @@ public class Application {
             builder.append("; Tags: ");
             tags.forEach(builder::append);
         }
+        builder.append("; Job Title: ").append(getJobTitle());
         return builder.toString();
     }
 
